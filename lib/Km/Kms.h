@@ -1,0 +1,45 @@
+#ifndef _KMS_H
+#define _KMS_H
+
+#include <stdint.h>
+#include <stdbool.h>
+#include <math.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// ==================== 机械参数 ====================
+#define L1 70.0f   // 大腿长度 (mm)
+#define L2 120.0f  // 小腿长度 (mm)
+#define L3 120.0f
+#define L4 70.0f
+#define L5 62.0f
+
+#ifndef PI
+#define PI 3.14159265358979323846f
+#endif
+
+typedef struct {
+    float x;
+    float y;
+} Node;
+
+typedef struct {
+    float alpha_left;
+    float beta_left;
+    float alpha_right;
+    float beta_right;
+} JointAngles;
+
+// [FIX] 改为返回 bool：原为 void，无解时完全不写输出结构体，
+//       调用方（main.cpp）会读到未初始化的栈值。
+//       true = 左右腿都解出；false = 至少一侧无解，输出已清零。
+bool inverse_kinematics(Node *left_target, Node *right_target, JointAngles *joint_angles);
+void forward_kinematics(Node *left_target, Node *right_target, JointAngles *joint_angles);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
